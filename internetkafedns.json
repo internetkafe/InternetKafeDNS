@@ -1,0 +1,95 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "dns": {
+    "servers": [
+      {
+        "address": "fakedns",
+        "domains": ["all"]
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "tag": "dns-in",
+      "port": 53,
+      "listen": "0.0.0.0",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": true,
+        "destOverride": ["fakedns", "http", "tls", "quic"]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4"
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "ip": ["198.18.0.0/15"],
+        "type": "field",
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "block"
+      }
+    ],
+    "domainStrategy": "IPIfNonMatch"
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "connIdle": 300,
+        "handshake": 4,
+        "bufferSize": 512,
+        "uplinkOnly": 5,
+        "downlinkOnly": 30
+      }
+    },
+    "system": {
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
+    }
+  },
+  "finalmask": {
+    "tcp": [
+      {
+        "type": "header-custom",
+        "settings": {
+          "clients": [],
+          "servers": [
+            [
+              {
+                "type": "hex",
+                "packet": "002d818000010001000000000379616e64657802727500000100010000291000000080000000c00c000100010000003c00044d580808"
+              }
+            ]
+          ]
+        }
+      }
+    ]
+  }
+}
