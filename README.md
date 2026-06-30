@@ -1,8 +1,6 @@
 # 🍵 InternetKafeDNS – Xray с маскировкой под DNS
 
 
-https://t.me/inetkafe
-
 
 ![Xray](https://img.shields.io/badge/Xray-26.3.27-blue?logo=xray)
 ![VLESS](https://img.shields.io/badge/protocol-VLESS-orange)
